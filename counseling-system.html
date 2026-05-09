@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ショウセイ カウンセリングシステム</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%82%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --panel: #ffffff;
+    --panel-2: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --accent: #1e3a8a;
+    --accent-2: #2563eb;
+    --accent-soft: #dbeafe;
+    --gold: #b8860b;
+    --gold-soft: #fef3c7;
+    --success: #16a34a;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --border: #e2e8f0;
+    --rose: #be185d;
+    --rose-soft: #fce7f3;
+    --green: #15803d;
+    --green-soft: #dcfce7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  header {
+    padding: 24px 20px;
+    background: linear-gradient(135deg, #1e3a8a, #312e81);
+    color: #fff;
+    text-align: center;
+  }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: 0.08em; }
+  header p { margin: 6px 0 0; font-size: 12px; opacity: 0.85; letter-spacing: 0.05em; }
+  .toolbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .toolbar input {
+    padding: 6px 10px;
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+  }
+  .toolbar button {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .toolbar button:hover { background: var(--accent-soft); border-color: var(--accent-2); }
+  .toolbar button.primary { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+  .toolbar button.danger { color: var(--danger); }
+  main { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .sec-head {
+    padding: 14px 18px;
+    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+    color: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sec-head h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; }
+  .sec-head .sub { font-size: 12px; opacity: 0.9; }
+  .sec-body { padding: 20px; }
+
+  /* Customer Info */
+  .customer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.05em; }
+  .field input, .field textarea, .field select {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    color: var(--text);
+    background: var(--panel);
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .field textarea { resize: vertical; min-height: 60px; }
+
+  /* Style grid */
+  .style-intro {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .style-intro h3 { margin: 0 0 4px; font-size: 18px; color: var(--accent); }
+  .style-intro p { margin: 0; font-size: 12px; color: var(--muted); }
+  .style-axis-wrap {
+    position: relative;
+    padding: 36px 60px;
+  }
+  .axis-label {
+    position: absolute;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .axis-top { top: 8px; left: 50%; transform: translateX(-50%); }
+  .axis-bottom { bottom: 8px; left: 50%; transform: translateX(-50%); }
+  .axis-left { left: 8px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: center; white-space: nowrap; }
+  .axis-right { right: 8px; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: center; white-space: nowrap; }
+  .axis-arrow { font-size: 14px; }
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .style-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    background: var(--panel);
+    transition: all 0.15s;
+    position: relative;
+  }
+  .style-card:hover {
+    border-color: var(--accent-2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.25);
+  }
+  .style-card.selected {
+    border-color: var(--accent-2);
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  }
+  .style-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    background: var(--accent-2);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .style-card h4 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .style-card p {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .style-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .style-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: var(--panel-2);
+    border-radius: 10px;
+    color: var(--muted);
+  }
+  /* Per-card color themes */
+  .style-card[data-style="mode"] h4 { background: #ede9fe; color: #6d28d9; }
+  .style-card[data-style="elegant"] h4 { background: #f3f4f6; color: #4b5563; }
+  .style-card[data-style="feminine"] h4 { background: #fce7f3; color: #be185d; }
+  .style-card[data-style="creative"] h4 { background: #fef3c7; color: #b45309; }
+  .style-card[data-style="natural"] h4 { background: #dcfce7; color: #15803d; }
+  .style-card[data-style="romantic"] h4 { background: #ffe4e6; color: #be123c; }
+  .style-card[data-style="street"] h4 { background: #d1fae5; color: #047857; }
+  .style-card[data-style="healthy"] h4 { background: #ecfccb; color: #4d7c0f; }
+  .style-card[data-style="cute"] h4 { background: #fae8ff; color: #a21caf; }
+
+  /* Steps */
+  .step-summary {
+    background: var(--gold-soft);
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #78350f;
+  }
+  .step {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background: var(--panel);
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--panel-2);
+    cursor: pointer;
+    user-select: none;
+  }
+  .step-head:hover { background: #f1f5f9; }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .step-title {
+    flex: 1;
+    min-width: 0;
+  }
+  .step-title h3 {
+    margin: 0 0 2px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .step-title .step-purpose {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .step-impact {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .impact-double { background: var(--rose-soft); color: var(--rose); }
+  .impact-single { background: var(--accent-soft); color: var(--accent); }
+  .step-check {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .step-toggle {
+    color: var(--muted);
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .step.open .step-toggle { transform: rotate(90deg); }
+  .step-body {
+    display: none;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .step.open .step-body { display: block; }
+  .step-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 720px) { .step-grid { grid-template-columns: 1fr; } }
+  .step-block {
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .step-block h5 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  .step-block ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+  }
+  .step-block li { margin-bottom: 4px; }
+  .talk-example {
+    background: #fffbeb;
+    border-left: 3px solid var(--gold);
+    padding: 10px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: #78350f;
+    font-style: italic;
+    line-height: 1.7;
+  }
+  .step-notes {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font: inherit;
+    color: var(--text);
+    background: var(--panel);
+    resize: vertical;
+    min-height: 60px;
+  }
+  .step-notes:focus { outline: none; border-color: var(--accent-2); }
+  .step-notes-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Summary box */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .summary-card {
+    background: linear-gradient(135deg, var(--panel-2) 0%, #fff 100%);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .summary-card h4 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .summary-card .val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    min-height: 20px;
+  }
+
+  /* Progress */
+  .progress-bar {
+    background: var(--panel-2);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-2), var(--rose));
+    transition: width 0.3s;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media print {
+    .toolbar { display: none; }
+    header { background: #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .step-body { display: block !important; }
+    section { break-inside: avoid; }
+  }
+
+  @media (max-width: 720px) {
+    .style-grid { grid-template-columns: 1fr; }
+    .style-axis-wrap { padding: 30px 20px; }
+    .axis-left, .axis-right { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✂️ ショウセイ カウンセリングシステム</h1>
+  <p>カット軸 価値情報伝達ステップ（カット ＋ 無害化ケア）</p>
+</header>
+
+<div class="toolbar">
+  <input type="text" id="customer-search" placeholder="お客様名で検索…" />
+  <button id="new-btn" class="primary">＋ 新規カウンセリング</button>
+  <button id="save-btn">💾 保存</button>
+  <button id="print-btn">📄 印刷 / PDF</button>
+  <button id="reset-btn" class="danger">🗑 リセット</button>
+</div>
+
+<main>
+
+  <!-- ===== Customer Info ===== -->
+  <section>
+    <div class="sec-head">
+      <h2>👤 お客様情報</h2>
+      <span class="sub">基本情報の記録</span>
+    </div>
+    <div class="sec-body">
+      <div class="customer-grid">
+        <div class="field">
+          <label>お客様名</label>
+          <input type="text" data-key="name" placeholder="山田 花子 様" />
+        </div>
+        <div class="field">
+          <label>来店日</label>
+          <input type="date" data-key="visitDate" />
+        </div>
+        <div class="field">
+          <label>担当スタイリスト</label>
+          <input type="text" data-key="stylist" placeholder="ショウセイ" />
+        </div>
+        <div class="field">
+          <label>来店回数</label>
+          <select data-key="visitCount">
+            <option value="">選択</option>
+            <option value="初回">初回</option>
+            <option value="2回目">2回目</option>
+            <option value="3回目">3回目</option>
+            <option value="4回目以降">4回目以降</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>髪の長さ・現状</label>
+          <input type="text" data-key="currentLength" placeholder="ミディアム / 肩下5cm 等" />
+        </div>
+        <div class="field">
+          <label>普段の扱い方・ライフスタイル</label>
+          <textarea data-key="lifestyle" placeholder="毎朝のスタイリング時間、活動内容など"></textarea>
+        </div>
+        <div class="field">
+          <label>悩み・希望</label>
+          <textarea data-key="concerns" placeholder="髪のお悩み、なりたいイメージ"></textarea>
+        </div>
+        <div class="field">
+          <label>過去の施術履歴</label>
+          <textarea data-key="history" placeholder="カラー / パーマ / 縮毛矯正 等"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Style Selection Grid ===== -->
+  <section>
+    <div class="sec-head">
+      <h2>🎨 好きな雰囲気・理想の女性像</h2>
+      <span class="sub" id="style-count-label">未選択</span>
+    </div>
+    <div class="sec-body">
+      <div class="style-intro">
+        <h3>好きな雰囲気・理想の女性像をお選びください</h3>
+        <p>一番近い雰囲気をタップしてください（複数選択もOK）</p>
+      </div>
+
+      <div class="style-axis-wrap">
+        <div class="axis-label axis-top">↑ 大人・上品</div>
+        <div class="axis-label axis-bottom">↓ カジュアル・親しみやすい</div>
+        <div class="axis-label axis-left">← 自分らしさ・個性</div>
+        <div class="axis-label axis-right">女性らしさ・愛され →</div>
+
+        <div class="style-grid" id="style-grid">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8-Step Counseling Flow ===== -->
+  <section>
+    <div class="sec-head">
+      <h2>📋 8ステップ カウンセリングフロー</h2>
+      <span class="sub" id="step-progress-label">0 / 8 完了</span>
+    </div>
+    <div class="sec-body">
+      <div class="step-summary">
+        🎯 ゴール：次回予約をいただき、継続的に「髪の未来」と「理想のスタイル」を任せていただく
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="progress-label">
+        <span>進捗</span>
+        <span id="progress-percent">0%</span>
+      </div>
+
+      <div id="steps-container" style="margin-top: 16px;">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Next Booking ===== -->
+  <section>
+    <div class="sec-head">
+      <h2>📅 次回予約</h2>
+      <span class="sub">継続のお約束</span>
+    </div>
+    <div class="sec-body">
+      <div class="customer-grid">
+        <div class="field">
+          <label>提案サイクル</label>
+          <select data-key="cycle">
+            <option value="">選択</option>
+            <option value="3週間">3週間</option>
+            <option value="4週間">4週間（推奨）</option>
+            <option value="5週間">5週間</option>
+            <option value="6週間">6週間</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>次回予約日</label>
+          <input type="date" data-key="nextDate" />
+        </div>
+        <div class="field">
+          <label>次回メニュー</label>
+          <input type="text" data-key="nextMenu" placeholder="カット ＋ 無害化ケア 等" />
+        </div>
+        <div class="field">
+          <label>3回来店プラン</label>
+          <select data-key="planStatus">
+            <option value="">選択</option>
+            <option value="伴走宣言済み">伴走宣言済み</option>
+            <option value="2回目予約済み">2回目予約済み</option>
+            <option value="3回目予約済み">3回目予約済み</option>
+            <option value="完了">完了</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>備考・申し送り</label>
+          <textarea data-key="memo" placeholder="次回までの宿題、ホームケアアドバイス、特記事項"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Summary ===== -->
+  <section>
+    <div class="sec-head">
+      <h2>✅ サマリー</h2>
+      <span class="sub">本日のカウンセリングまとめ</span>
+    </div>
+    <div class="sec-body">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h4>お客様</h4>
+          <div class="val" id="sum-name">—</div>
+        </div>
+        <div class="summary-card">
+          <h4>選択スタイル</h4>
+          <div class="val" id="sum-styles">—</div>
+        </div>
+        <div class="summary-card">
+          <h4>完了ステップ</h4>
+          <div class="val" id="sum-steps">0 / 8</div>
+        </div>
+        <div class="summary-card">
+          <h4>次回予約</h4>
+          <div class="val" id="sum-next">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ====== Data ======
+const STYLES = [
+  { id: 'mode', name: 'モード・ハンサム', desc: '洗練されたクールな雰囲気。自分らしさを大切に芯のある女性らしさ', tags: ['#モード', '#クール', '#洗練'] },
+  { id: 'elegant', name: '上品・エレガント', desc: '大人の余裕と品のある雰囲気。上質でエレガントな女性らしさ', tags: ['#上品', '#エレガント', '#大人'] },
+  { id: 'feminine', name: 'フェミニン・愛され', desc: '柔らかく女性らしい愛される雰囲気。優しさと華やかさのあるスタイル', tags: ['#フェミニン', '#愛され', '#柔らかい'] },
+  { id: 'creative', name: '個性派・クリエイティブ', desc: '自分らしい感性を大切にするスタイル。周りと差がつくおしゃれな雰囲気', tags: ['#個性的', '#クリエイティブ', '#おしゃれ'] },
+  { id: 'natural', name: 'ナチュラル・ニュートラル', desc: '自然体で心地よいナチュラルな雰囲気。飾らない自分らしさを大切にしたスタイル', tags: ['#ナチュラル', '#自然体', '#シンプル'] },
+  { id: 'romantic', name: 'ロマンティック・可愛い', desc: '甘さと可愛らしさのある雰囲気。ときめくようなロマンティックな印象', tags: ['#可愛い', '#ロマンティック', '#甘め'] },
+  { id: 'street', name: 'ストリート・カジュアル', desc: 'ラフでこなれたカジュアルな雰囲気。トレンド感のあるかっこいいスタイル', tags: ['#ストリート', '#カジュアル', '#こなれ感'] },
+  { id: 'healthy', name: 'ヘルシー・リラックス', desc: '健康的で抜け感のあるリラックス感。自然で心地よいライフスタイルに似合う', tags: ['#ヘルシー', '#リラックス', '#抜け感'] },
+  { id: 'cute', name: 'ガーリー・キュート', desc: '可愛らしく親しみやすいキュートな雰囲気。明るく元気な印象を大切にしたスタイル', tags: ['#ガーリー', '#キュート', '#親しみやすい'] },
+];
+
+const STEPS = [
+  {
+    id: 1,
+    title: 'コンセプトプレゼン',
+    sub: '（なくすことで綺麗に）',
+    purpose: 'サロンの価値・世界観を伝え、安心感をつくる',
+    actions: [
+      'コンセプトを伝える',
+      '「なくすことで綺麗に」の説明',
+      '将来の美しさまで見据える（頭皮・髪・生活習慣）',
+    ],
+    talk: '「ショウセイでは、"なくすことで綺麗にするお手伝い"をしています。余計なものを残さず、頭皮環境を整え、髪が育ちやすい状態にすることで、スタイルが長持ちし、未来の美しさにつながります。」',
+    impact: '価値観の共有で信頼が生まれる',
+    impactLevel: 'single',
+  },
+  {
+    id: 2,
+    title: 'プレカウンセリング',
+    sub: '（悩みの可視化）',
+    purpose: '悩み・希望を整理し、相互理解を深める',
+    actions: [
+      '悩みを丁寧にヒアリング',
+      '過去の履歴・生活習慣を確認',
+      'なりたいイメージを整理',
+    ],
+    talk: '「今のお悩み、過去の履歴、普段の扱い方まで含めて整理させていただきます。理想のスタイルを一緒に作っていきましょう。」',
+    impact: '相互理解が深まり次回来店の土台になる',
+    impactLevel: 'single',
+  },
+  {
+    id: 3,
+    title: 'メインカウンセリング ＆ ビフォー撮影',
+    sub: '（現状を「見える化」する）',
+    purpose: '現状を「見える化」し、価値を伝える準備をする',
+    actions: [
+      '頭皮・髪の状態をチェック',
+      'ビフォー撮影（正面・横・後ろ）',
+      '現状の課題を共有',
+    ],
+    talk: '「より良くするために、まずは状態を記録させていただきます。変化を比較することで、価値を実感していただけます。」',
+    impact: '視覚的価値で満足度が上がり次回予約につながる',
+    impactLevel: 'double',
+  },
+  {
+    id: 4,
+    title: '頭皮とカットの関係を説明',
+    sub: '（立ち上がりのメカニズム）',
+    purpose: '頭皮環境とスタイルの関係を理解してもらう',
+    actions: [
+      '頭皮環境がスタイルに与える影響を説明',
+      '立ち上がりの違いをイメージで伝える',
+      '無害化ケアの必要性を伝える',
+    ],
+    talk: '「頭皮の環境が悪いと、髪がペタッと付き、立ち上がりが出にくくなります。無害化ケアで頭皮環境を整えることで、根元からふんわり立ち上がり、スタイルが決まりやすくなります。」',
+    impact: '頭皮ケアの必要性が腑に落ち、次回来店の理由になる',
+    impactLevel: 'double',
+  },
+  {
+    id: 5,
+    title: '施術（カット ＋ 無害化ケア）',
+    sub: '（理想のシルエットを作る）',
+    purpose: '理想のシルエットと頭皮環境をつくり上げる',
+    actions: [
+      '無害化ケアで頭皮をクリーンに',
+      '骨格・髪質に合わせたカット',
+      '扱いやすく再現性の高い仕上がり',
+    ],
+    talk: '「頭皮をクリーンに整えた上で、骨格や髪質に合わせてカットしていきます。乾かすだけで綺麗にまとまるように仕上げています。」',
+    impact: '技術価値の理解で満足度が高まり信頼が強くなる',
+    impactLevel: 'double',
+  },
+  {
+    id: 6,
+    title: '3回来店トーク ＋ 伴走宣言',
+    sub: '（継続の価値を伝える）',
+    purpose: '継続の必要性と一緒に髪を育てるイメージをつくる',
+    actions: [
+      '3回来店の設計を伝える',
+      '自分の言葉で「伴走宣言」をする',
+      '未来の理想像を共有',
+    ],
+    talk: '「3回来店で扱いやすく、綺麗が続く状態を作ります。一緒に髪を綺麗にしていきたいので、ぜひよろしくお願いします！必ず綺麗にしますので、安心してお任せください。」',
+    impact: '伴走宣言で特別感・安心感が生まれ次回予約への確度が最も上がる',
+    impactLevel: 'double',
+  },
+  {
+    id: 7,
+    title: '適正サイクル提案',
+    sub: '（頭皮環境スタイルキープライン）',
+    purpose: '頭皮環境とスタイルを常に良い状態でキープする提案',
+    actions: [
+      'ベストな来店周期を提案',
+      '早めのメンテナンスのメリットを説明',
+      'キープライン図を使って説明',
+    ],
+    talk: '「時間の経過とともに、活性酸素などの影響で頭皮環境が少しずつ下がってきます。下がりきる前にケアすることで、いい状態を維持できます。このラインが、綺麗をキープできるベストな周期になります。」',
+    impact: '来店理由が明確になり次回予約の正当性が生まれる',
+    impactLevel: 'double',
+  },
+  {
+    id: 8,
+    title: 'アフターカウンセリング ＆ 次回予約クロージング',
+    sub: '（仕上がりの確認・次回へつなげる）',
+    purpose: '仕上がりの確認と安心感を高め、次回予約につなげる',
+    actions: [
+      'アフター撮影（必要に応じて）',
+      '仕上がりの変化を一緒に確認',
+      '次回予約の提案・確定',
+    ],
+    talk: '「しっかり変化を感じていただけましたか？今の状態をキープするなら●週間後がベストなタイミングです。ご都合の良い日にちを押さえておきますね。」',
+    impact: '具体的な提案で予約率が大きく上がる',
+    impactLevel: 'double',
+  },
+];
+
+const STORAGE_KEY = 'shousei-counseling-v1';
+
+// ====== State ======
+let state = loadState();
+
+function defaultState() {
+  return {
+    customer: {},
+    selectedStyles: [],
+    stepsDone: {},
+    stepNotes: {},
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    return { ...defaultState(), ...JSON.parse(raw) };
+  } catch {
+    return defaultState();
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  flashSave();
+}
+
+let saveTimer = null;
+function debouncedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 400);
+}
+
+function flashSave() {
+  const btn = document.getElementById('save-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✅ 保存しました';
+  setTimeout(() => { btn.textContent = orig; }, 1200);
+}
+
+// ====== Render Style Grid ======
+function renderStyles() {
+  const grid = document.getElementById('style-grid');
+  grid.innerHTML = STYLES.map(s => `
+    <div class="style-card ${state.selectedStyles.includes(s.id) ? 'selected' : ''}" data-style="${s.id}">
+      <h4>${s.name}</h4>
+      <p>${s.desc}</p>
+      <div class="style-tags">
+        ${s.tags.map(t => `<span class="style-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.style-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.style;
+      const idx = state.selectedStyles.indexOf(id);
+      if (idx >= 0) state.selectedStyles.splice(idx, 1);
+      else state.selectedStyles.push(id);
+      card.classList.toggle('selected');
+      updateStyleCount();
+      updateSummary();
+      debouncedSave();
+    });
+  });
+
+  updateStyleCount();
+}
+
+function updateStyleCount() {
+  const label = document.getElementById('style-count-label');
+  const n = state.selectedStyles.length;
+  if (n === 0) label.textContent = '未選択';
+  else label.textContent = `${n}件選択中`;
+}
+
+// ====== Render Steps ======
+function renderSteps() {
+  const container = document.getElementById('steps-container');
+  container.innerHTML = STEPS.map(step => {
+    const done = !!state.stepsDone[step.id];
+    const note = state.stepNotes[step.id] || '';
+    return `
+      <div class="step ${done ? 'done' : ''}" data-step="${step.id}">
+        <div class="step-head">
+          <input type="checkbox" class="step-check" data-step-check="${step.id}" ${done ? 'checked' : ''} />
+          <div class="step-num">${step.id}</div>
+          <div class="step-title">
+            <h3>${step.title} <span style="font-weight: 400; color: var(--muted); font-size: 12px;">${step.sub}</span></h3>
+            <div class="step-purpose">${step.purpose}</div>
+          </div>
+          <span class="step-impact ${step.impactLevel === 'double' ? 'impact-double' : 'impact-single'}">
+            ${step.impactLevel === 'double' ? '◎ 高影響' : '○ 影響'}
+          </span>
+          <span class="step-toggle" data-step-toggle="${step.id}">▶</span>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-block">
+              <h5>やること（行動）</h5>
+              <ul>${step.actions.map(a => `<li>${a}</li>`).join('')}</ul>
+            </div>
+            <div class="step-block">
+              <h5>次回予約への影響</h5>
+              <p style="margin: 0; font-size: 13px; color: var(--rose); font-weight: 600;">${step.impact}</p>
+            </div>
+          </div>
+          <div class="step-block" style="margin-bottom: 14px;">
+            <h5>トーク例</h5>
+            <div class="talk-example">${step.talk}</div>
+          </div>
+          <label class="step-notes-label">📝 このステップでのお客様の反応・メモ</label>
+          <textarea class="step-notes" data-step-note="${step.id}" placeholder="お客様の反応・気づき・申し送りをメモ">${note}</textarea>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Toggle open
+  container.querySelectorAll('.step-head').forEach(head => {
+    head.addEventListener('click', e => {
+      if (e.target.matches('input, textarea')) return;
+      head.parentElement.classList.toggle('open');
+    });
+  });
+  // Check
+  container.querySelectorAll('[data-step-check]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      e.stopPropagation();
+      const id = cb.dataset.stepCheck;
+      state.stepsDone[id] = cb.checked;
+      updateStepProgress();
+      updateSummary();
+      debouncedSave();
+    });
+    cb.addEventListener('click', e => e.stopPropagation());
+  });
+  // Notes
+  container.querySelectorAll('[data-step-note]').forEach(ta => {
+    ta.addEventListener('input', () => {
+      state.stepNotes[ta.dataset.stepNote] = ta.value;
+      debouncedSave();
+    });
+  });
+
+  updateStepProgress();
+}
+
+function updateStepProgress() {
+  const done = STEPS.filter(s => state.stepsDone[s.id]).length;
+  const total = STEPS.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('step-progress-label').textContent = `${done} / ${total} 完了`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-percent').textContent = pct + '%';
+}
+
+// ====== Customer fields ======
+function bindFields() {
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (state.customer[key] != null) el.value = state.customer[key];
+    el.addEventListener('input', () => {
+      state.customer[key] = el.value;
+      updateSummary();
+      debouncedSave();
+    });
+    el.addEventListener('change', () => {
+      state.customer[key] = el.value;
+      updateSummary();
+      debouncedSave();
+    });
+  });
+}
+
+// ====== Summary ======
+function updateSummary() {
+  document.getElementById('sum-name').textContent = state.customer.name || '—';
+  const styles = state.selectedStyles.map(id => STYLES.find(s => s.id === id)?.name).filter(Boolean);
+  document.getElementById('sum-styles').textContent = styles.length ? styles.join(' / ') : '—';
+  const done = STEPS.filter(s => state.stepsDone[s.id]).length;
+  document.getElementById('sum-steps').textContent = `${done} / ${STEPS.length}`;
+  const next = state.customer.nextDate ? `${state.customer.nextDate}（${state.customer.cycle || '—'}）` : '—';
+  document.getElementById('sum-next').textContent = next;
+}
+
+// ====== Toolbar ======
+document.getElementById('save-btn').addEventListener('click', saveState);
+document.getElementById('print-btn').addEventListener('click', () => {
+  // Open all steps before print
+  document.querySelectorAll('.step').forEach(s => s.classList.add('open'));
+  window.print();
+});
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('全てのデータをリセットしますか？')) return;
+  state = defaultState();
+  saveState();
+  document.querySelectorAll('[data-key]').forEach(el => el.value = '');
+  renderStyles();
+  renderSteps();
+  updateSummary();
+});
+document.getElementById('new-btn').addEventListener('click', () => {
+  if (!confirm('新規カウンセリングを開始しますか？（現在のデータはリセットされます）')) return;
+  state = defaultState();
+  saveState();
+  document.querySelectorAll('[data-key]').forEach(el => el.value = '');
+  // Set today
+  const today = new Date().toISOString().slice(0, 10);
+  const dateEl = document.querySelector('[data-key="visitDate"]');
+  if (dateEl) {
+    dateEl.value = today;
+    state.customer.visitDate = today;
+  }
+  renderStyles();
+  renderSteps();
+  updateSummary();
+});
+
+// ====== Init ======
+renderStyles();
+renderSteps();
+bindFields();
+updateSummary();
+</script>
+
+</body>
+</html>
