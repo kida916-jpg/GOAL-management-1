@@ -1001,6 +1001,80 @@
   }
   .week-restore-btn:hover { background: #eff6ff; border-color: #3b82f6; color: #2563eb; }
   .todo-item input[type="checkbox"] { flex-shrink: 0; cursor: pointer; }
+  /* Todo detail toggle button (▶/▼ + ＋/📝) */
+  .todo-detail-toggle {
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--muted);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .todo-detail-toggle:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .todo-detail-toggle.has-content {
+    border-color: #f59e0b;
+    color: #d97706;
+    background: #fffbeb;
+    font-weight: 700;
+  }
+  .todo-detail-toggle.has-content:hover {
+    background: #d97706;
+    color: #fff;
+    border-color: #d97706;
+  }
+  /* Detail panel (hidden by default, shown when open) */
+  .todo-item-wrap {
+    margin-bottom: 4px;
+  }
+  .todo-detail-panel {
+    display: none;
+    margin: 0 0 6px 32px;
+    padding: 8px 10px;
+    background: #f9fafb;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .todo-detail-panel.show { display: block; }
+  .todo-detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .todo-detail-panel .rich-field-wrap {
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+  .todo-detail-panel .rich-display {
+    min-height: 40px;
+    padding: 8px 50px 8px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .todo-detail-panel .rich-input {
+    min-height: 40px;
+    padding: 8px 50px 8px 10px;
+    font-size: 12px;
+  }
+  .todo-detail-panel .rich-expand-btn {
+    top: 3px;
+    right: 3px;
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+  @media (max-width: 720px) {
+    .todo-detail-panel { margin-left: 24px; padding: 6px 8px; }
+  }
   .todo-item input[type="text"],
   .todo-item textarea.todo-text {
     flex: 1;
@@ -1283,6 +1357,29 @@
     color: #fff;
     border-color: #0369a1;
   }
+  .plan-chip .chip-detail {
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+    font-family: inherit;
+  }
+  .plan-chip .chip-detail.has-content {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    color: #d97706;
+    font-weight: 700;
+  }
+  .plan-chip .chip-detail:hover {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #f59e0b;
+  }
   .plan-chip .chip-drag {
     cursor: grab;
     color: var(--muted);
@@ -1499,14 +1596,15 @@
   }
   .rich-display {
     min-height: 60px;
-    padding: 10px 60px 10px 12px;
+    padding: 10px 12px;
     font-size: 13px;
     line-height: 1.6;
     color: var(--text);
-    cursor: text;
+    cursor: pointer;
     border-radius: 6px;
     word-break: break-word;
     white-space: normal;
+    position: relative;
   }
   .rich-display:hover { background: #f9fafb; }
   .rich-display strong { font-weight: 700; color: #111827; }
@@ -1519,8 +1617,9 @@
   }
   .rich-display a.rich-link:hover,
   .rich-preview a.rich-link:hover { color: #1e40af; }
-  .rich-display ul, .rich-preview ul { margin: 4px 0 4px 20px; padding: 0; }
-  .rich-display li, .rich-preview li { margin: 2px 0; }
+  .rich-display ul, .rich-preview ul { margin: 6px 0 6px 22px; padding: 0; list-style: disc; }
+  .rich-display ol, .rich-preview ol { margin: 6px 0 6px 24px; padding: 0; list-style: decimal; }
+  .rich-display li, .rich-preview li { margin: 3px 0; }
   .rich-display code, .rich-preview code {
     background: #f3f4f6;
     border-radius: 3px;
@@ -1528,6 +1627,45 @@
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 12px;
   }
+  .rich-display .rich-h, .rich-preview .rich-h { font-weight: 800; line-height: 1.3; margin: 12px 0 6px; color: #111827; }
+  .rich-display .rich-h:first-child, .rich-preview .rich-h:first-child { margin-top: 0; }
+  .rich-display .rich-h1, .rich-preview .rich-h1 { font-size: 1.6em; border-bottom: 2px solid #d1d5db; padding-bottom: 4px; }
+  .rich-display .rich-h2, .rich-preview .rich-h2 { font-size: 1.35em; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px; color: #1e3a8a; }
+  .rich-display .rich-h3, .rich-preview .rich-h3 { font-size: 1.18em; color: #1f2937; }
+  .rich-display .rich-h4, .rich-preview .rich-h4 { font-size: 1.05em; color: #374151; }
+  .rich-display .rich-h5, .rich-preview .rich-h5 { font-size: 1em; color: #4b5563; }
+  .rich-display .rich-h6, .rich-preview .rich-h6 { font-size: 0.95em; color: #6b7280; font-weight: 700; }
+  .rich-display .rich-hr, .rich-preview .rich-hr { border: 0; border-top: 1px dashed #d1d5db; margin: 10px 0; }
+  .rich-display.collapsed {
+    max-height: calc(1.6em * 4 + 20px);
+    overflow: hidden;
+    position: relative;
+  }
+  .rich-display.collapsed::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 32px;
+    background: linear-gradient(to bottom, transparent, #fff 90%);
+    pointer-events: none;
+  }
+  .rich-display:hover.collapsed::after { background: linear-gradient(to bottom, transparent, #f9fafb 90%); }
+  .rich-display.collapsed .rich-expand-hint {
+    position: absolute;
+    bottom: 4px;
+    right: 8px;
+    font-size: 11px;
+    color: #2563eb;
+    font-weight: 700;
+    background: rgba(255,255,255,0.9);
+    padding: 1px 8px;
+    border-radius: 999px;
+    border: 1px solid #93c5fd;
+    z-index: 2;
+  }
+  .rich-display:not(.collapsed) .rich-expand-hint { display: none; }
   .rich-placeholder {
     color: var(--muted);
     font-style: italic;
@@ -1537,14 +1675,14 @@
     width: 100%;
     border: none;
     background: #fff;
-    padding: 10px 60px 10px 12px;
+    padding: 10px 12px;
     font-size: 13px;
     font-family: inherit;
     resize: none;
     overflow: hidden;
     line-height: 1.5;
     color: var(--text);
-    min-height: 60px;
+    min-height: 80px;
     border-radius: 6px;
     box-sizing: border-box;
     outline: 1.5px solid var(--accent);
@@ -1565,6 +1703,15 @@
   }
   .rich-preview strong { font-weight: 700; color: #111827; }
   .rich-preview em { font-style: italic; }
+  .rich-preview .rich-h { font-weight: 800; line-height: 1.3; margin: 14px 0 8px; color: #111827; }
+  .rich-preview .rich-h:first-child { margin-top: 0; }
+  .rich-preview .rich-h1 { font-size: 1.7em; border-bottom: 2px solid #d1d5db; padding-bottom: 6px; }
+  .rich-preview .rich-h2 { font-size: 1.4em; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; color: #1e3a8a; }
+  .rich-preview .rich-h3 { font-size: 1.2em; color: #1f2937; }
+  .rich-preview .rich-h4 { font-size: 1.08em; color: #374151; }
+  .rich-preview .rich-h5 { font-size: 1em; color: #4b5563; }
+  .rich-preview .rich-h6 { font-size: 0.95em; color: #6b7280; font-weight: 700; }
+  .rich-preview .rich-hr { border: 0; border-top: 1px dashed #d1d5db; margin: 12px 0; }
   .rich-modal-hint {
     font-size: 12px;
     color: var(--muted);
@@ -3475,7 +3622,7 @@
       }
       if (old.todos) {
         [1,2,3].forEach(k => {
-          d.todos[k] = (old.todos[k] || []).map(t => ({ id: newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine }));
+          d.todos[k] = (old.todos[k] || []).map(t => ({ id: newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine, details: t.details || '' }));
         });
       }
       if (old.weeks) {
@@ -3557,7 +3704,7 @@
         derivePeriodFields(merged, merged.period);
         // ensure todo ids
         TODO_KEYS.forEach(k => {
-          merged.todos[k] = (merged.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine }));
+          merged.todos[k] = (merged.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine, details: t.details || '' }));
         });
         // ensure week shape
         merged.weeks = merged.weeks.map((w, i) => ({
@@ -3622,15 +3769,21 @@
         <div class="kpi-card-body">
           <div class="kpi-row">
             <div class="lbl">現状</div>
-            <textarea data-goal="${k}" data-field="current" placeholder="今の状態（文章）">${esc(g.current)}</textarea>
+            <div class="rich-field-wrap goal-rich-field" data-goal="${k}" data-field="current" data-label="現状" data-act="goal-text-expand">
+              <div class="rich-display collapsed">${g.current ? renderRichText(g.current) : '<span class="rich-placeholder">今の状態を入力（クリックで全文表示・編集）。**太字** / # 見出し / URL自動リンクなど対応</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
+            </div>
           </div>
           <div class="kpi-row">
             <div class="lbl">課題</div>
-            <textarea data-goal="${k}" data-field="issue" placeholder="目標達成を阻む課題">${esc(g.issue)}</textarea>
+            <div class="rich-field-wrap goal-rich-field" data-goal="${k}" data-field="issue" data-label="課題" data-act="goal-text-expand">
+              <div class="rich-display collapsed">${g.issue ? renderRichText(g.issue) : '<span class="rich-placeholder">目標達成を阻む課題を入力（クリックで全文表示・編集）</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
+            </div>
           </div>
           <div class="kpi-row">
             <div class="lbl">解決策</div>
-            <textarea data-goal="${k}" data-field="solution" placeholder="課題を解決する方法・アクション">${esc(g.solution)}</textarea>
+            <div class="rich-field-wrap goal-rich-field" data-goal="${k}" data-field="solution" data-label="解決策" data-act="goal-text-expand">
+              <div class="rich-display collapsed">${g.solution ? renderRichText(g.solution) : '<span class="rich-placeholder">課題を解決する方法・アクションを入力（クリックで全文表示・編集）</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
+            </div>
           </div>
           <div class="metric-block">
             <div class="mlabel">
@@ -3678,41 +3831,59 @@
   }
   // Track which "history" sections are open (in-memory)
   const openHistory = new Set();
+  // Track which Todo detail panels are open (in-memory; not persisted)
+  const openTodoDetails = new Set();
 
   // ===== Rich text rendering (markdown subset + URL auto-link) =====
-  // Supports: **bold**, *italic*, `code`, lines starting with "- " or "* " as list, URLs auto-linkified, newlines → <br>
+  // Supports: H1-H6, **bold**, *italic*, `code`, lines starting with "- " or "* " as ul,
+  // numbered lists "1. xxx" as ol, horizontal rules "---", URLs auto-linkified, newlines → <br>
   function renderRichText(text) {
     if (text === null || text === undefined || text === '') return '';
     let s = String(text);
     // 1) HTML escape first
     s = s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    // 2) URL auto-link (must precede bold to allow URLs with ** inside not to break)
-    s = s.replace(/(https?:\/\/[^\s<>"']+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="rich-link">$1</a>');
-    // 3) Code spans `...`
-    s = s.replace(/`([^`\n]+?)`/g, '<code>$1</code>');
-    // 4) Bold **...**  (non-greedy, single line)
-    s = s.replace(/\*\*([^*\n][^*\n]*?)\*\*/g, '<strong>$1</strong>');
-    // 5) Italic *...* (single line, avoid matching ** that survived)
-    s = s.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
-    // 6) Lists: lines starting with "- " or "* "
+    // 2) Process line-by-line for block-level elements (heading / list / hr)
     const lines = s.split('\n');
-    let inList = false;
+    let listType = null;
     const out = [];
-    for (const line of lines) {
-      const m = line.match(/^[\s]*[-*][\s]+(.+)$/);
-      if (m) {
-        if (!inList) { out.push('<ul>'); inList = true; }
-        out.push('<li>' + m[1] + '</li>');
-      } else {
-        if (inList) { out.push('</ul>'); inList = false; }
-        out.push(line);
+    const closeList = () => { if (listType) { out.push(`</${listType}>`); listType = null; } };
+    for (let line of lines) {
+      if (/^\s*(---|\*\*\*|___)\s*$/.test(line)) {
+        closeList();
+        out.push('<hr class="rich-hr">');
+        continue;
       }
+      const h = line.match(/^(#{1,6})\s+(.+)$/);
+      if (h) {
+        closeList();
+        const level = h[1].length;
+        out.push(`<h${level} class="rich-h rich-h${level}">${h[2]}</h${level}>`);
+        continue;
+      }
+      const ul = line.match(/^[\s]*[-*・][\s]+(.+)$/);
+      if (ul) {
+        if (listType !== 'ul') { closeList(); out.push('<ul>'); listType = 'ul'; }
+        out.push('<li>' + ul[1] + '</li>');
+        continue;
+      }
+      const ol = line.match(/^[\s]*\d+[.)][\s]+(.+)$/);
+      if (ol) {
+        if (listType !== 'ol') { closeList(); out.push('<ol>'); listType = 'ol'; }
+        out.push('<li>' + ol[1] + '</li>');
+        continue;
+      }
+      closeList();
+      out.push(line);
     }
-    if (inList) out.push('</ul>');
+    closeList();
     s = out.join('\n');
-    // 7) Newlines → <br> (but not inside <ul>...</ul> blocks where we already structured them)
-    s = s.replace(/\n(?!<\/?(?:ul|li))/g, '<br>');
-    s = s.replace(/<\/ul><br>/g, '</ul>').replace(/<br><ul>/g, '<ul>');
+    s = s.replace(/(https?:\/\/[^\s<>"']+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="rich-link">$1</a>');
+    s = s.replace(/`([^`\n]+?)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*\n][^*\n]*?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+    s = s.replace(/\n(?!<\/?(?:ul|ol|li|h[1-6]|hr))/g, '<br>');
+    s = s.replace(/<\/(ul|ol|h[1-6]|hr)><br>/g, '</$1>');
+    s = s.replace(/<br>(<(?:ul|ol|h[1-6]|hr))/g, '$1');
     return s;
   }
 
@@ -3762,16 +3933,27 @@
     const completedMeta = isHistory && t.completedAt
       ? `<span class="todo-completed-meta">✓ ${fmtCompletedDate(t.completedAt)}</span>`
       : '';
+    const isOpen = openTodoDetails.has(t.id);
+    const hasDetails = !!(t.details && t.details.trim());
     return `
-    <div class="todo-item ${t.done ? 'done' : ''} ${priClass} ${otherCls}" draggable="true" data-id="${t.id}" data-kpi="${k}">
-      <span class="drag-handle" title="ドラッグで並び替え">⋮⋮</span>
-      <input type="checkbox" data-id="${t.id}" data-act="check" ${t.done ? 'checked' : ''} />
-      <textarea class="autosize todo-text" data-id="${t.id}" data-act="text" placeholder="Todoを入力" rows="1">${esc(t.text)}</textarea>
-      <button class="priority-btn ${priClass}" data-id="${t.id}" data-act="cycle-priority" title="優先順位を切り替え（大/中/小/なし）">${PRIORITY_LABELS[p]}</button>
-      <button class="routine-btn ${t.routine ? 'active' : ''}" data-id="${t.id}" data-act="cycle-routine" title="ルーティン: 期切替時に自動で次期へ復元される（クリックでON/OFF）">🔁</button>
-      ${completedMeta}
-      <button data-id="${t.id}" data-act="del" title="削除"
-        style="border:none;background:transparent;cursor:pointer;color:var(--muted);font-size:14px;">×</button>
+    <div class="todo-item-wrap ${isOpen ? 'open' : ''}" data-id="${t.id}">
+      <div class="todo-item ${t.done ? 'done' : ''} ${priClass} ${otherCls}" draggable="true" data-id="${t.id}" data-kpi="${k}">
+        <span class="drag-handle" title="ドラッグで並び替え">⋮⋮</span>
+        <input type="checkbox" data-id="${t.id}" data-act="check" ${t.done ? 'checked' : ''} />
+        <textarea class="autosize todo-text" data-id="${t.id}" data-act="text" placeholder="Todoを入力" rows="1">${esc(t.text)}</textarea>
+        <button class="todo-detail-toggle ${hasDetails ? 'has-content' : ''}" data-id="${t.id}" data-act="toggle-detail" title="詳細・リンクを${isOpen ? '閉じる' : '開く'}（クリックで何をどうするか書ける）">${isOpen ? '▼' : '▶'}${hasDetails ? '📝' : '＋'}</button>
+        <button class="priority-btn ${priClass}" data-id="${t.id}" data-act="cycle-priority" title="優先順位を切り替え（大/中/小/なし）">${PRIORITY_LABELS[p]}</button>
+        <button class="routine-btn ${t.routine ? 'active' : ''}" data-id="${t.id}" data-act="cycle-routine" title="ルーティン: 期切替時に自動で次期へ復元される（クリックでON/OFF）">🔁</button>
+        ${completedMeta}
+        <button data-id="${t.id}" data-act="del" title="削除"
+          style="border:none;background:transparent;cursor:pointer;color:var(--muted);font-size:14px;">×</button>
+      </div>
+      <div class="todo-detail-panel ${isOpen ? 'show' : ''}" data-id="${t.id}">
+        <div class="todo-detail-label">📝 何をどうする？（具体メモ・リンク・参考資料 — クリックで全文表示・編集）</div>
+        <div class="rich-field-wrap todo-detail-field" data-todoid="${t.id}" data-field="details" data-act="todo-detail-expand">
+          <div class="rich-display todo-detail-display collapsed">${t.details ? renderRichText(t.details) : '<span class="rich-placeholder">具体的にやることや参考リンクを書く（例: 「○○さんに連絡 - https://example.com の資料を見てから提案」）。**太字** / *斜体* / # 見出し / URL自動リンク 対応</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
+        </div>
+      </div>
     </div>
   `;
   }
@@ -3801,7 +3983,7 @@
       const prog = $(progId);
       if (prog) prog.textContent = `${done.length} / ${list.length} 完了`;
       // Auto-resize the rendered todo textareas so long text isn't clipped to 1 line
-      container.querySelectorAll('textarea.todo-text').forEach(autoResize);
+      container.querySelectorAll('textarea.todo-text, textarea.rich-input').forEach(autoResize);
     });
     $('todo-summary').textContent = totalAll ? `全体 ${totalDone} / ${totalAll} 完了` : '—';
     // Refresh the overdue/today stats card
@@ -3963,6 +4145,7 @@
               <input type="checkbox" class="chip-check" data-todoid="${todo.id}" data-act="chip-check" ${todo.done ? 'checked' : ''} title="完了/未完了を切り替え" />
               <span class="chip-text">${esc(todo.text || '(未入力)')}</span>
               <button class="chip-prio ${priClass}" data-todoid="${todo.id}" data-act="cycle-chip-priority" title="優先順位を切り替え（大/中/小/なし）">${PRIORITY_LABELS[p]}</button>
+              <button class="chip-detail ${todo.details && todo.details.trim() ? 'has-content' : ''}" data-todoid="${todo.id}" data-act="chip-detail-open" title="このTodoの詳細メモ・リンクを開く（クリックで全文表示・編集）">${todo.details && todo.details.trim() ? '📝' : '＋'}</button>
               <button class="chip-cal" data-week="${wi}" data-todoid="${todo.id}" data-act="todo-calendar" title="このTodoをカレンダーに登録（1時間枠）">📅</button>
               <button class="chip-x" data-week="${wi}" data-todoid="${todo.id}" data-act="unpick" title="この週から外す">×</button>
             </div>
@@ -4021,10 +4204,8 @@
               </div>
               <div class="plan-chips">${chips}</div>
               <button class="plan-pick-btn" data-week="${wi}" data-act="pick">＋ Todoから選ぶ</button>
-              <div class="rich-field-wrap" data-week="${wi}" data-field="planNote">
-                <button type="button" class="rich-expand-btn" data-act="rich-expand" data-week="${wi}" data-field="planNote" data-label="自由メモ" title="拡大表示（全文を大きく見る／編集）">🔍 拡大</button>
-                <div class="rich-display" data-act="rich-edit">${w.planNote ? renderRichText(w.planNote) : '<span class="rich-placeholder">自由メモ（任意） — クリックして入力。**太字** / *斜体* / URLが使えます</span>'}</div>
-                <textarea class="note rich-input" data-week="${wi}" data-field="planNote" placeholder="自由メモ（任意） — **太字** や URLが使えます" style="display:none;">${esc(w.planNote)}</textarea>
+              <div class="rich-field-wrap" data-week="${wi}" data-field="planNote" data-label="自由メモ" data-act="rich-expand">
+                <div class="rich-display collapsed">${w.planNote ? renderRichText(w.planNote) : '<span class="rich-placeholder">自由メモ（任意） — クリックして全文表示・編集。**太字** / # 見出し / URL自動リンクなど対応</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
               </div>
             </div>
             <div class="week-field">
@@ -4032,11 +4213,9 @@
               ${doneListHTML}
             </div>
             <div class="week-field">
-              <div class="week-field-label">💭 振り返り（理由・改善案・気付き）</div>
-              <div class="rich-field-wrap" data-week="${wi}" data-field="review">
-                <button type="button" class="rich-expand-btn" data-act="rich-expand" data-week="${wi}" data-field="review" data-label="振り返り" title="拡大表示（全文を大きく見る／編集）">🔍 拡大</button>
-                <div class="rich-display" data-act="rich-edit">${w.review ? renderRichText(w.review) : '<span class="rich-placeholder">振り返り — クリックして入力。**太字** / *斜体* / URLが使えます</span>'}</div>
-                <textarea class="rich-input" data-week="${wi}" data-field="review" placeholder="振り返り（理由・改善案・気付き）" style="display:none;">${esc(w.review)}</textarea>
+              <div class="week-field-label">💭 振り返り（理由・改善案・気付き — クリックで全文表示・編集）</div>
+              <div class="rich-field-wrap" data-week="${wi}" data-field="review" data-label="振り返り" data-act="rich-expand">
+                <div class="rich-display collapsed">${w.review ? renderRichText(w.review) : '<span class="rich-placeholder">振り返り — クリックして全文表示・編集。**太字** / # 見出し / URL自動リンクなど対応</span>'}<span class="rich-expand-hint">クリックで全文＋編集</span></div>
               </div>
             </div>
           </div>
@@ -4548,7 +4727,7 @@
       const rawK = t.dataset.kpi;
       const k = (rawK === 'other') ? 'other' : +rawK;
       if (!state.todos[k]) state.todos[k] = [];
-      state.todos[k].push({ id: newId(), text: '', done: false, priority: 'none', completedAt: null, routine: false });
+      state.todos[k].push({ id: newId(), text: '', done: false, priority: 'none', completedAt: null, routine: false, details: '' });
       save(); renderTodos();
       setTimeout(() => {
         const containerId = (k === 'other') ? 'todo-other' : `todo-${k}`;
@@ -4578,6 +4757,24 @@
       if (found) {
         found.todo.routine = !found.todo.routine;
         save(); renderTodos();
+      }
+    } else if (t.dataset.act === 'toggle-detail' && t.dataset.id) {
+      e.stopPropagation();
+      const id = t.dataset.id;
+      if (openTodoDetails.has(id)) openTodoDetails.delete(id);
+      else openTodoDetails.add(id);
+      const wrap = document.querySelector(`.todo-item-wrap[data-id="${id}"]`);
+      if (wrap) {
+        const isOpen = openTodoDetails.has(id);
+        wrap.classList.toggle('open', isOpen);
+        const panel = wrap.querySelector('.todo-detail-panel');
+        if (panel) panel.classList.toggle('show', isOpen);
+        const toggleBtn = wrap.querySelector('[data-act="toggle-detail"]');
+        if (toggleBtn) {
+          const hasContent = toggleBtn.classList.contains('has-content');
+          toggleBtn.textContent = (isOpen ? '▼' : '▶') + (hasContent ? '📝' : '＋');
+          toggleBtn.title = `詳細・リンクを${isOpen ? '閉じる' : '開く'}（クリックで何をどうするか書ける）`;
+        }
       }
     } else if (t.dataset.act === 'toggle-history' && t.dataset.kpi !== undefined) {
       e.stopPropagation();
@@ -4609,6 +4806,9 @@
       const wi = +t.dataset.week;
       const id = t.dataset.todoid;
       openCalendarModalForTodo(wi, id);
+    } else if (t.dataset.act === 'chip-detail-open') {
+      e.stopPropagation();
+      openTodoDetailModal(t.dataset.todoid);
     } else if (t.dataset.act === 'uncheck-week') {
       e.stopPropagation();
       const wi = +t.dataset.week;
@@ -5164,7 +5364,7 @@
         };
         // normalize todos / weeks
         TODO_KEYS.forEach(k => {
-          state.todos[k] = (state.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine }));
+          state.todos[k] = (state.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine, details: t.details || '' }));
         });
         state.weeks = state.weeks.map((w, i) => ({
           week: w.week || DEFAULT_WEEKS[i] || `週${i+1}`,
@@ -5218,7 +5418,7 @@
         archives: Array.isArray(data.archives) ? data.archives : [],
       };
       TODO_KEYS.forEach(k => {
-        newState.todos[k] = (newState.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine }));
+        newState.todos[k] = (newState.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine, details: t.details || '' }));
       });
       newState.weeks = newState.weeks.map((w, i) => ({
         week: w.week || DEFAULT_WEEKS[i] || `週${i+1}`,
@@ -5409,7 +5609,7 @@
           archives: Array.isArray(data.archives) ? data.archives : [],
         };
         TODO_KEYS.forEach(k => {
-          state.todos[k] = (state.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine }));
+          state.todos[k] = (state.todos[k] || []).map(t => ({ id: t.id || newId(), text: t.text || '', done: !!t.done, priority: t.priority || 'none', completedAt: t.completedAt || null, routine: !!t.routine, details: t.details || '' }));
         });
         state.weeks = state.weeks.map((w, i) => ({
           week: w.week || DEFAULT_WEEKS[i] || `週${i+1}`,
@@ -5620,7 +5820,7 @@
   }
 
   // Common output instruction template (structured + step-by-step + concrete examples + grounded reasoning)
-  const AI_OUTPUT_GUIDE = `\n\n【回答フォーマット（必ず守ってください）】\n■ まず「結論」を最初に2〜3行で明示\n■ その後、見出し付き箇条書きで構造化（マークダウン記法OK）\n■ 各項目は「具体例×3つ」を必ず含める（抽象論NG）\n■ 各提案には「なぜそうするか」の根拠（数値・理由・経験則）を必ず添える\n■ 重要なポイントは太字や絵文字で強調\n■ 中学生でも分かる平易な言葉で（専門用語使う場合は注釈）\n■ 各見出しの本文は400字程度を目安に、しっかり情報量を入れる\n■ 最後に「💡 次の一歩（今日できる1つの行動）」で締める\n\n【NG事項】\n× 「重要です」「考えましょう」など抽象的・薄い断定\n× 根拠のない提案（必ず「なぜなら〜だから」を入れる）\n× 一般論で終わる（その人の状況に合わせた具体性が必要）\n× 専門用語の羅列\n× 短すぎる回答（情報が薄い）`;
+  const AI_OUTPUT_GUIDE = `\n\n【回答スタイル — 短く・定量で・コピペしやすく】\n\n■ 全体ボリューム：<strong>長すぎNG</strong>。読み返すのに30秒で済む量で。各項目は <strong>2〜3文(合計100〜150字程度)</strong> で十分。\n\n■ 構成(この順番で)：\n  1. <strong>結論</strong>(2行以内) — 何をすべきか1文で。\n  2. <strong>定量(数字で見える化)</strong> — 現状値／目標値／ギャップ／件数／時間配分などを <strong>必ず計算式付き</strong>で。「定性的な意味づけ」は最小限。<strong>数字で語る癖</strong>をつけるのが目的。\n  3. <strong>観点・選択肢リスト</strong> — ユーザーが自分で判断できる観点／選択肢を提示。各項目に「何を選ぶ・書くか／数値の目安／短い例」をセット。\n  4. <strong>💡 次の一歩</strong>(1行) — 今日／今週やる1つの行動。\n\n■ 表現：\n  - <strong>太字</strong>や絵文字で強調、マークダウン見出し(##・###)で階層化\n  - 数値は <strong>必ず計算式付き</strong>(例: 「100万 ÷ 4週 = 25万/週」「達成率 70/100 = 70%」)\n  - 専門用語は括弧で平易注釈\n\n■ 視点(重要)：\n  - <strong>経営者視点だけでなく、店長／マネージャー視点も含める</strong>。現場スタッフが「ああなるほど」と思えるレベルの具体性で。\n\n【NG事項】\n× 1項目で400字超えるような長文／定性的・抽象的な断言／数字なしで語る／一般論で終わる`;
 
   function openAIModal(mode, ctx) {
     const titleEl = $('ai-modal-title');
@@ -5651,13 +5851,75 @@
       } else {
         kpiPart = `■ Part 2: 既に入力されている KPI①②③ の精度向上\n（KPI①②③すべて入力済み）\n<strong>3つのKPIをより具体的・行動可能・測定可能にしてください。</strong>\n1. 各KPIについて、KGI達成への貢献度を計算（例: KPI①が10%上がったらKGIに○%寄与）\n2. 各KPIの目標数値が「適切なストレッチ」になっているか評価（甘い/厳しすぎる）\n3. 各KPIの「課題」「解決策」テキストの書き方を改善する具体例\n4. 3つのKPIが <strong>互いに独立かつ網羅的</strong>（MECE）に組まれているかチェック\n5. 入れ替え／統合／分割すべきKPIがあれば理由付きで提案\n6. KPI同士の連動性（相乗効果）を分析`;
       }
-      prompt = `あなたは経営戦略のコンサルタントです。以下の入力情報を踏まえて、対象期間「${periodLabel}」の <strong>KGI（最重要目標）の設定／改善</strong> と、それを達成するための <strong>KPI①②③のセット提案／改善</strong> を一緒に行ってください。\n\n${ctx}\n\n【対象期間】${periodLabel}\nこの期間内に現実的に実行・達成できる範囲で提案してください。\n\n【現在の入力状況】\n- KGI: ${kgiFilled ? '✅ 入力済み（精度向上が必要）' : '❌ 未入力（新規提案が必要）'}\n- KPI①②③: ${kpiFilledCount}/3 が入力済み（${kpiFilledCount === 0 ? '全て新規提案' : kpiFilledCount === 3 ? '全て精度向上' : '一部精度向上＋一部新規提案'}）\n\n【お願い（必ず以下の順序で回答）】\n\n${kgiPart}\n\n${kpiPart}\n\n■ Part 3: KGI と KPI①②③ の整合性チェック\n1. 提案した（または改善した）KGIに対して、KPI①②③が <strong>因果関係を持って繋がっている</strong> か確認\n2. KPI①②③をすべて達成すれば、KGIは <strong>論理的に達成される構造</strong> になっているか\n3. 数値の整合性（例: KPI①の客数増 × KPI②の客単価増 = KGIの売上増 が成立する）を計算式で示す\n4. ズレや矛盾があれば修正提案\n\n■ Part 4: 期間「${periodLabel}」内の達成戦略（具体行動レベル）\n1. KPI①②③それぞれに対して、期間内に実行すべき施策を3つずつ提示\n2. 期間の前半・中盤・後半でどう進めるか時系列で明示\n3. 期間終了時に到達しているべき状態を具体的に描写（数値達成度＋定性的なあるべき姿）\n\n【重要】\n- このボタンは「KGIを決める／改善する」相談用ですが、必ず <strong>KGIとセットでKPIも提案</strong> してください。KGI単体では行動に繋がらないため。\n- 一般論NG。入力されている年間最終ゴール・KGI・KPIテキストから具体的に引用しながら論理展開すること\n- 数値はすべて計算式と一緒に提示（例: 「年商10億 ÷ 4期 = 1期あたり2.5億」）\n- ユーザーが <strong>そのまま入力欄にコピペできる粒度</strong> で提案する${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは経営戦略のコンサルタント＋店長/マネージャーです。以下の入力をもとに、対象期間「${periodLabel}」の <strong>KGI(最重要目標)の決定／改善</strong> と、それを達成する <strong>KPIのセット提案／改善</strong> を行ってください。
+
+${ctx}
+
+【対象期間】${periodLabel}
+【現状】KGI: ${kgiFilled ? '✅入力済' : '❌未入力'} ／ KPI: ${kpiFilledCount}/3 入力済
+
+## 1. 結論(2行)
+何をKGIにし、KPIをどう設計するか1文ずつ。
+
+## 2. 定量で見える化(数字だけ・計算式付き)
+年間最終ゴールから逆算した「期間内の達成すべき数値」(例: 「年商10億 ÷ 4期 = 2.5億/期」「客数2万 ÷ 3ヶ月 = 6,700人/月」)。
+
+## 3. KGIの選択肢(3パターン)★最重要
+${kgiFilled ? '入力済KGIの精度向上+ストレッチ／保守の代替案も提示' : '未入力なので3つ提案'}
+  - 【保守プラン】着実達成可能な数値+書き方例
+  - 【標準プラン】適度ストレッチの数値+書き方例
+  - 【挑戦プラン】成長加速の数値+書き方例
+各プランに：数値根拠(年間ゴール対比%、季節性、市場前提)／「いつまでに何をどれだけ」形式のテキスト例／<strong>店長/マネージャー視点で「現場で追えるか」評価</strong>
+
+## 4. KPIの選択肢(5〜6個から選ぶ)★重要
+KGIを数式分解し、KPI候補を <strong>5〜6個</strong> 提示(売上=客数×客単価×頻度 → 客数系2/単価系2/頻度系2 など)。各候補に：
+  - 数値目標の目安(現状から+%／絶対値)
+  - KGIへの数値貢献度(計算式)
+  - <strong>現場で測りやすいか</strong>(店長/マネージャー視点)
+  - <strong>★ 推奨組み合わせ(KPI①②③にこの順で)</strong>を1セット明示
+
+## 5. KGIとKPIの整合性チェック
+KPI①②③を全て達成するとKGIが論理的に達成される計算式。
+
+## 6. 💡 次の一歩
+今日決めること1つ。
+
+【重要】KGI＋KPIをセットで／経営者+店長/マネージャー両視点／数値は必ず計算式付き${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'annual-goal-consult') {
       title = '🌟 AIに年間ゴール相談';
-      prompt = `あなたは経営戦略のコンサルタントです。以下の入力済みのKGI/KPIをもとに、年間最終ゴール（1年通しての最終目標・ビジョン）の設定をサポートしてください。\n\n${ctx}\n\n【相談の前提】\nユーザーは既に「今期のKGI」「KPI①②③」を入力しています。これらの内容と数値から逆算・拡張して、年間でどんな最終ゴールを目指すべきかを一緒に考えてください。\n\n【お願い（必ず以下の順序で回答）】\n\n■ Part 1: 現状の入力から見える「年間で目指すべき方向性」\n1. 入力されているKGI/KPIから読み取れる、ユーザーの事業ステージや志向性を読み解く\n2. その方向性を踏まえた「年間で達成すべきテーマ」を提示\n3. 現状値と目標値の数値ギャップから、年間でどのスケールが妥当か逆算\n\n■ Part 2: 年間最終ゴールの具体案（3パターン）\n1. 【保守的プラン】今期KGIの延長線で着実に達成可能な年間ゴール\n2. 【標準プラン】適度なストレッチを含む現実的な年間ゴール\n3. 【挑戦プラン】ビジョンを広げた拡張的な年間ゴール\n各プランに、数値目標と達成シナリオの概略を添える\n\n■ Part 3: 推奨案と根拠\n1. 上記3案のうち、入力情報から最も推奨できるプランを選択\n2. なぜそれが妥当か、数値根拠と論理を提示\n3. その年間ゴールに到達した時のあるべき姿（定性的な描写）\n\n■ Part 4: 年間ゴール → 今期KGIの整合性チェック\n1. 提案した年間ゴールに対して、現在入力されている今期KGIが妥当か評価\n2. 修正提案があれば具体的に\n3. 4半期ごとのマイルストーン目安${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは経営戦略のコンサルタント＋店長/マネージャーです。入力済みのKGI/KPIをもとに、年間最終ゴールの設定をサポートしてください。
+
+${ctx}
+
+## 1. 結論(2行)
+何を年間ゴールにすべきか1文で。
+
+## 2. 定量で見える化
+現状値・目標値・年間スケールを計算式で。
+
+## 3. 年間ゴールの選択肢(3パターン)
+  - 【保守】着実達成可能な数値+書き方例
+  - 【標準】適度ストレッチの数値+書き方例
+  - 【挑戦】成長加速の数値+書き方例
+
+## 4. 推奨案
+3つから1つ選び、選定理由を計算式で。
+
+## 5. 今期KGIとの整合性
+4半期マイルストーン目安。
+
+## 6. 💡 次の一歩${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'todo-suggest') {
       title = '✅ AIにTodo提案を相談';
-      prompt = `あなたは目標達成の伴走コーチです。以下のKGI/KPIを達成するために、各KPIを実行可能なTodo（行動レベル）に分解してください。\n\n${ctx}\n\n【お願い】\n1. KPI①〜③それぞれに対して、5〜8個のTodoを提案\n2. Todoは「動詞」で始まる具体的な行動形式（例：「〇〇に営業電話する」「LP原稿を書く」）\n3. 優先順位（大/中/小）も提案\n4. 1週間で着手できる粒度に${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは目標達成の伴走コーチ＋店長/マネージャーです。各KPIを達成するためのTodoを <strong>種類豊富に</strong> 提案してください。各KPIに5〜10個ずつ。
+
+${ctx}
+
+各KPI(①②③)それぞれに：
+  - 動詞始まりの具体行動(5〜10個)
+  - 各Todoに「なぜ必要か／実行結果どう良くなるか／優先順位／週時間」セット
+  - 営業／マーケ／業務改善／学習／分析／人材／CRM／仕組み化など多角的に
+  - 経営者+店長/マネージャー両視点${AI_OUTPUT_GUIDE}`;
     } else if (mode && mode.startsWith('todo-suggest-kpi-')) {
       const n = +mode.split('-').pop();
       const label = ['①','②','③'][n - 1];
@@ -5665,7 +5927,47 @@
       const kpi = state.goals[k] || {};
       const existing = (state.todos[n] || []).map(t => `  - ${t.text || '(未入力)'} [優先${t.priority === 'high' ? '大' : t.priority === 'medium' ? '中' : t.priority === 'low' ? '小' : 'なし'}]${t.done ? ' ✓' : ''}`).join('\n') || '  （まだ登録なし）';
       title = `🤖 AIにKPI${label}のTodo提案を相談`;
-      prompt = `あなたは目標達成の伴走コーチです。以下のKPI${label}に絞って、達成のために必要な行動Todoを提案してください。\n\n${ctx}\n\n【分析対象】KPI${label}\n  目標: ${kpi.target || '(未入力)'}\n  現状: ${kpi.current || '(未入力)'}\n  課題: ${kpi.issue || '(未入力)'}\n  解決策: ${kpi.solution || '(未入力)'}\n\n【現在登録されているKPI${label}のTodo】\n${existing}\n\n【お願い（必ず以下の順序で回答）】\n\n■ Part 1: 既存Todoの評価\n1. すでに登録されているTodoがKPI${label}達成にどれだけ寄与するか評価（A/B/C）\n2. 重複や曖昧なTodoがあれば指摘\n3. 「これは効果的」「これは外していい」を明示\n\n■ Part 2: 追加すべき新規Todoの提案（5〜8個）\n1. KPI${label}の <strong>課題と解決策</strong> から逆算して、まだカバーされていない行動を提案\n2. Todoは「動詞」で始まる具体的な行動形式（例: 「〇〇に営業電話する」「LP原稿を書く」「定例MTGの議事録テンプレートを作る」）\n3. 各Todoに：\n   - <strong>優先順位</strong>（大／中／小）— インパクト×簡単さで判定\n   - <strong>週あたりの所要時間目安</strong>（例: 週2h）\n   - <strong>1週間で着手できる粒度</strong>（巨大すぎるTodoは分割する）\n4. ルーティン化すべきTodo（🔁マークで毎期復元したいもの）を明示\n\n■ Part 3: KPI${label}達成への道筋\n1. 提案したTodoを実行すると、KPI${label}の現状値→目標値にどう近づくかロードマップ\n2. 1ヶ月後・2ヶ月後・3ヶ月後の中間チェックポイント\n3. KPI${label}が他のKPI（${label === '①' ? '②③' : label === '②' ? '①③' : '①②'}）とどう連動するか相乗効果も考慮\n\n【重要】\n- KPI${label}だけに集中。他のKPIのTodoは提案しない。\n- 入力されている課題・解決策テキストから具体的に引用しながら論理展開${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは目標達成の伴走コーチ＋店長/マネージャーです。KPI${label}達成のための <strong>Todoの種類とヒント</strong>を提示してください。経験の浅いスタッフが「どんなTodoがあるか」をパッと把握できる量で。
+
+${ctx}
+
+【分析対象】KPI${label}
+  目標: ${kpi.target || '(未入力)'}
+  現状: ${kpi.current || '(未入力)'}
+  課題: ${kpi.issue || '(未入力)'}
+  解決策: ${kpi.solution || '(未入力)'}
+
+【既存Todo】
+${existing}
+
+## 1. 結論(2行)
+どんな種類のTodoを揃えるべきか1文。
+
+## 2. 定量で見える化
+KPI${label}の現状値→目標値ギャップを計算式で。「ギャップを埋めるには週○件のTodo必要」など。
+
+## 3. Todo提案 ★ <strong>5〜10個</strong>(種類豊富に)
+各Todoに以下セット：
+
+  📌 <strong>Todoタイトル</strong>(動詞始まり)
+  💡 <strong>なぜ必要か</strong>(1行・KPIへの効き目)
+  📈 <strong>実行結果どう良くなるか</strong>(数値で示せると◎)
+  ⚖️ 優先順位(大/中/小 — インパクト×簡単さ)
+  ⏱️ 週あたり所要時間(例: 週2h)
+  🔁 ルーティン化推奨かスポット対応か
+
+種類のバリエーション(複数角度から):
+  - 営業/顧客接点系  - 情報発信/マーケ系  - 業務改善/効率化系
+  - 学習/インプット系  - 数値把握/分析系  - 人材育成/組織系
+  - 顧客フォロー/CRM系  - 仕組み化/標準化系
+
+## 4. 既存Todoの評価
+A(効果大)/B(普通)/C(外す)で1行ずつ。
+
+## 5. 💡 次の一歩
+今週まずやる1つ。
+
+【重要】KPI${label}だけに集中／経営者+店長/マネージャー両視点／最低5個以上${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'review') {
       title = '🔍 AIに振り返り相談';
       prompt = `あなたは目標達成の伴走コーチです。以下のKGI/KPIと進捗を踏まえて、改善ポイントと次の一手を提案してください。\n\n${ctx}\n\n【お願い】\n1. 達成率の評価\n2. 進捗が遅れているKPIに対して、改善のヒント\n3. 来週優先すべきTodoの再提案\n4. モチベーション維持のためのコメント${AI_OUTPUT_GUIDE}`;
@@ -5673,21 +5975,153 @@
       const kpiNum = +mode.split('-').pop();
       const kpiLabel = ['①','②','③'][kpiNum - 1];
       title = `🔬 AIにKPI${kpiLabel}分析を相談`;
-      prompt = `あなたは経営戦略のコンサルタントです。以下の情報を踏まえて、KPI${kpiLabel}に焦点を当てた分析と提案を行ってください。\n\n${ctx}\n\n【分析対象】\nKPI${kpiLabel}（上記の【KPI${kpiLabel}】の項目）\n\n【分析の視点】\n1. 数値ギャップ分析：KPI${kpiLabel}の現状値と目標値の差分を計算（％やインパクト換算）\n2. 課題の特定：KPI${kpiLabel}達成を阻んでいる課題を具体的に3つ以上抽出\n3. 解決策の提示：各課題に対する解決策を3つずつ（実行可能なレベル）\n4. KGIへの貢献度：このKPI${kpiLabel}がKGI全体にどう寄与するかを定量的に説明\n5. 他KPIとの連動性：他のKPI（KPI①②③のうちKPI${kpiLabel}以外）と相互作用がある場合、どう連携・補完するかを分析\n6. 短期施策：今週・来週で着手できる具体的な行動を3つ\n\n【重要】\n- 数値（現状値・目標値・差分・%）を計算式と一緒に必ず示す\n- 既に入力されている「課題」「解決策」テキストを参考にしつつ、より深い視点で再提案\n- KPI${kpiLabel}単体ではなく、KGI達成という全体像の中で位置づける${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは経営戦略のコンサルタント＋店長/マネージャーです。KPI${kpiLabel}の <strong>方向性を決める</strong> ためのアドバイスを。受講生が「現状・課題・解決策」を書き込めるようサポートします。
+
+${ctx}
+
+## 1. 結論(2行)
+このKPIの方向性を1文で。
+
+## 2. 定量で見える化
+現状値・目標値・ギャップを計算式で。「KGIに○%寄与」も明示。
+
+## 3. 現状の書き方ヒント
+受講生が「現状」欄に書くべき内容(1〜2行で十分)の具体例3つ：
+  例) 「現状○○件/月。前期比+/-N%。クレーム原因はAが主」
+事実ベースで <strong>短く</strong> 書く形を提示。
+
+## 4. 課題の書き方ヒント★最重要
+達成を阻む <strong>課題候補を5〜6個</strong> 提示。各課題に：
+  - 課題タイトル(1行)
+  - なぜ課題か(数値や状況で)
+  - 深刻度(大/中/小)
+受講生が選んで書き込めるレベルで。
+
+## 5. 解決策の書き方ヒント★最重要
+上記課題に対する <strong>解決策候補を5〜6個</strong>：
+  - 解決策タイトル(動詞始まり)
+  - 想定効果(数値で)
+  - 実行難易度(難/中/易)
+経営者+店長/マネージャー両視点。
+
+## 6. 他KPIとの連動
+KPI${kpiLabel}が他KPIとどう連動するか1行。
+
+## 7. 💡 次の一歩
+今日決めること1つ。
+
+【重要】現状は1〜2行で十分／課題・解決策は <strong>選択肢から選んで書き込める</strong> 粒度／数値は必ず計算式付き${AI_OUTPUT_GUIDE}`;
     } else if (mode && mode.startsWith('result-analysis-')) {
       const key = mode.split('result-analysis-')[1];  // 'kgi'|'kpi1'|'kpi2'|'kpi3'
       const label = (key === 'kgi') ? 'KGI' : (key === 'kpi1' ? 'KPI①' : key === 'kpi2' ? 'KPI②' : 'KPI③');
       title = `🔬 AIに「${label}」結果分析を相談`;
-      prompt = `あなたは経営戦略のコンサルタントであり、目標達成の伴走コーチです。以下の${label}に関する全ての入力情報（数値・文章・Todo・週次の実行状況・振り返り）を読み取った上で、「数値で見えた未達ギャップは"なぜ"生まれたのか」「どうすれば埋められたのか」「次の期に向けた具体的な改善提案」を分析してください。\n\n${ctx}\n\n【お願い（必ず以下の順序で回答）】\n\n■ Part 1: 数値ギャップの整理（事実）\n1. ${label}の現状値・目標値・実績値・達成率・成長率を再掲し、ギャップの大きさを定量化\n2. 「未達」「超過達成」「完全達成」のいずれかを明示\n3. ギャップを<strong>絶対値・割合・インパクト</strong>の3段階で表現（例: 「目標まで○○○円不足、目標比△%、年間ゴール達成への影響◎%」）\n\n■ Part 2: ギャップが生まれた原因の分析（"なぜ"）\n1. 入力されている「課題」「解決策」のテキストと、実際の週次行動・Todo完了状況を照らし合わせる\n2. <strong>根本原因を3つ以上抽出</strong>（例: ① 計画したTodoの完了率が低い、② 完了Todoがあっても優先順位が低かった、③ そもそも目標数値が高すぎた、④ 解決策が課題に対して的外れだった、⑤ 週次の振り返りで気づきがあったのに行動修正されていない、など）\n3. 各原因について「どの週・どのTodo・どの振り返り記述から読み取れるか」<strong>具体的に引用しながら</strong>論理を示す\n4. ${label === 'KGI' ? 'KGI達成のためにKPI①②③のどれが特にボトルネックになったか' : `${label}が他のKPIや${label === 'KPI①' ? 'KPI②③' : label === 'KPI②' ? 'KPI①③' : 'KPI①②'}とどう連動・競合したか`}も分析\n\n■ Part 3: ギャップを埋めるためにできた選択肢（"どうすれば良かったか"）\n1. 振り返って「もし期の途中で気付けていれば、こう動けば埋められた」という代替シナリオを<strong>3パターン</strong>提示\n2. 各シナリオに「いつ・何を・どれくらい」の粒度で具体行動を提示\n3. なぜその行動が有効か（数値根拠・経験則・ロジック）を必ず添える\n\n■ Part 4: 次の期に向けた改善提案（最重要）\n1. <strong>目標値の見直し</strong>: 次期${label}の数値目標は据え置き／上方修正／下方修正のどれが妥当か、根拠付きで\n2. <strong>課題・解決策テキストの修正提案</strong>: 入力されている「課題」「解決策」をどう書き換えるべきか具体例\n3. <strong>追加すべきTodo（5〜8個）</strong>: 動詞で始まる行動形式で、優先順位（大/中/小）と週あたりの所要時間付き\n4. <strong>削除・統廃合すべき既存Todo</strong>: 達成率に貢献しなかったTodoは何か、なぜ外すべきか\n5. <strong>週次運用の改善</strong>: 「先週の引き継ぎ運用」「ルーティンTodoの見直し」「振り返りの質を上げる工夫」を提案\n6. <strong>早期警告サイン</strong>: 次期で「またギャップが生まれそう」な兆候を察知するための週次チェックポイント\n\n【重要】\n- 一般論は禁止。必ず<strong>入力情報（数値・テキスト・Todo・振り返り）から具体的に引用</strong>して論理展開\n- 「頑張りましょう」のような精神論で締めない\n- 数値はすべて計算式と一緒に提示（例: 「目標200万 - 実績150万 = 50万未達 (25%ギャップ)」）\n- 受講生が次期に「何から手を付けるか」が明確になる粒度で提案${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは経営戦略のコンサルタント＋店長/マネージャーです。${label}の今期全入力(数値・テキスト・Todo・週次振り返り)を読み取り、<strong>今期総括と次期の約束</strong>を整理してください。
+
+${ctx}
+
+## 1. 結論(2行)
+今期何が起き、次期何を約束するか1文ずつ。
+
+## 2. 定量で振り返り
+  - 現状値／目標値／実績値／達成率／成長率を計算式で再掲
+  - ギャップを「絶対値・割合・年間ゴール影響%」の3段階で
+  - 例: 「目標300万 - 実績240万 = 60万未達(20%ギャップ／年間5%遅延)」
+
+## 3. 今期総括(数字で語る)
+  - 達成 or 未達の <strong>主因3つ</strong> 抽出(各1行)
+  - 各主因に「どの週・どのTodo・どの振り返り」から読み取れるかを引用
+  - 「Todo完了率○%／優先大の達成率○%」など数値で
+
+## 4. もしこうしていたら(代替シナリオ3つ)
+  - いつ・何を・どれくらい(数値)
+  - 効果の見込み(計算式)
+
+## 5. 次期の約束★最重要
+  - <strong>目標値の見直し</strong>: 据置/上方/下方(計算式付き)
+  - <strong>課題・解決策テキストの修正案</strong>: コピペ可な具体例で
+  - <strong>追加Todo</strong>: 5〜10個、優先順位＋週時間付き
+  - <strong>削除Todo</strong>: 貢献しなかったTodoを名指し
+  - <strong>週次運用の改善</strong>: 引き継ぎ／ルーティン／振り返り
+  - <strong>早期警告サイン</strong>: 次期で兆候察知のチェックポイント
+
+## 6. 💡 次の一歩
+次期初日に決めて実行する1つ。
+
+【重要】精神論NG／入力から具体引用／数値は必ず計算式付き／経営者+店長/マネージャー両視点${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'other-analysis') {
       title = '🔬 AIに「その他の業務」分析を相談';
       prompt = `あなたは経営戦略のコンサルタントです。以下のKGI/KPI/その他の業務の入力情報を踏まえて、「KPI①②③以外で優先してやるべきこと」を分析・提案してください。\n\n${ctx}\n\n【分析対象】\n「その他の業務」エリア — KPI①②③に該当しないが、事業継続・成長のために必要な業務領域\n\n【お願い（必ず以下の順序で回答）】\n\n■ Part 1: KPI①②③のスコープ確認\n1. 既に入力されているKPI①②③が「事業の成長ドライバー」として何をカバーしているか整理\n2. 逆に「KPI①②③ではカバーされていない領域」を3〜5領域で具体的に列挙\n   例: バックオフィス／組織づくり／採用／法務・コンプライアンス／資金繰り／長期R&D／自分自身の学習・健康 など\n\n■ Part 2: 「その他の業務」で優先すべきテーマの特定\n1. KGI達成・年間最終ゴール達成に「間接的だが必要不可欠」な業務テーマを3つ提示\n2. 各テーマについて「なぜ優先すべきか」の根拠（リスク回避／土台作り／レバレッジ など）を必ず添える\n3. 「やらないと半年〜1年後にKGI達成を阻害する」という観点で重要度を判定\n\n■ Part 3: 具体的なTodo提案（5〜8個）\n1. 「その他の業務」エリアに追加すべきTodoを5〜8個、動詞で始まる具体的な行動形式で提案\n2. 各Todoに「優先順位（大/中/小）」と「想定所要時間（週あたり何時間）」を付ける\n3. 「ルーティン化すべきもの」と「スポット対応で良いもの」を分けて明示\n\n■ Part 4: 既に入力されている「その他の業務」内容の評価\n1. 現在入力されている「その他の業務」の目標・現状テキストが妥当か評価\n2. 過剰なら削減、不足なら追加の具体提案\n3. KPI①②③とのバランス（時間配分の目安: 例 KPI:その他 = 7:3 など）を提示\n\n【重要】\n- 「KPI①②③に集中すべき」という結論は避ける（その他の業務にも必ず重要なものがある前提で分析）\n- ユーザーが見落としがちな「土台業務」「リスク管理業務」を特に意識して提案\n- 数値や具体例（時間配分%、頻度、優先順位）を必ず添える${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'week-priority') {
       title = '🎯 AIに今週の優先順位を相談';
-      prompt = `あなたは目標達成の伴走コーチです。以下のKGI/KPIと、今週この受講生が考えているTodoリストを見て、最適な優先順位と他に追加すべきTodoがないかを提案してください。\n\n${ctx}\n\n【最優先の判断基準】\n優先順位の定義は「インパクト（成果の大きさ） × 簡単さ（着手しやすさ）」のマトリクスです。\n  - インパクト大 × 簡単 = 最優先（すぐやる）\n  - インパクト大 × 難しい = 計画的に着手\n  - インパクト小 × 簡単 = スキマ時間で\n  - インパクト小 × 難しい = やらない判断もアリ\n\n【お願い】\n1. 今週登録されている各Todoについて「インパクト」「簡単さ」の2軸で評価（5段階）\n2. その評価をもとに、今週の優先順位を1位から並べ直して提案\n3. KGI/KPI達成のために「他に追加すべきTodo」があれば3〜5個提案（具体的な行動レベルで）\n4. 逆に「今週は外しても良いTodo」があれば理由付きで指摘\n5. 1週間で現実的に実行できる量に絞り込む${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは目標達成の伴走コーチ＋店長/マネージャーです。今週Todoの優先順位を <strong>インパクト×簡単さ</strong> で整理し、必要なら <strong>KGI/KPI自体の見直し</strong> も提案してください。
+
+${ctx}
+
+【判断基準】インパクト×簡単さ：
+  - 大×簡単=最優先  - 大×難=計画的  - 小×簡単=スキマ時間  - 小×難=やらない判断もアリ
+
+## 1. 結論(2行)
+今週やるべきこと1文＋方向性注意があれば1文。
+
+## 2. 定量で見える化
+  - 今週のTodo数／完了数／インパクト大比率を計算式で
+  - 残時間(週単位)とTodo所要時間合計を比較
+
+## 3. 優先順位の並べ替え(I:1〜5/E:1〜5)
+各Todoを2軸スコア化、合計の高い順に並び替え。
+
+## 4. 追加すべきTodo(3〜5個)
+動詞始まり・優先順位・所要時間付き。
+
+## 5. 外していいTodo
+貢献度の低いものを理由付きで。
+
+## 6. ★ KGI/KPI方向性チェック(重要)
+以下の <strong>あからさまな兆候</strong> がないかチェック：
+  - 完了Todoが多いのにKPI数値が動かない
+  - 高優先Todoが何週も連続で未完了
+  - 課題と解決策が噛み合っていない
+  - 振り返りに「これじゃない」記述が複数
+
+あれば：<strong>「KGI/KPIは見直すべき」</strong>とハッキリ提案＋代替候補1〜2個(数値付き)。
+なければ「現在のKGI/KPIは適切」1行で。
+
+## 7. 💡 次の一歩
+今日まずやる1つ。
+
+【重要】KGI/KPI見直しはあからさまな兆候があるときだけ／数値で語る／経営者+店長/マネージャー両視点${AI_OUTPUT_GUIDE}`;
     } else if (mode === 'week-focus') {
       title = '💡 AIに「今週何を相談すべきか」を提案してもらう';
-      prompt = `あなたは目標達成の伴走コーチです。受講生が「今週は何をAIに相談すべきかパッと思いつかない」状態です。以下のKGI/KPI・今週のTodo・進捗状況を読み取って、<strong>今この週で相談すべきテーマ</strong>を提案し、そのまま使えるプロンプトの例も提示してください。\n\n${ctx}\n\n【お願い（必ず以下の順序で回答）】\n\n■ Part 1: 今週の状況サマリー（あなたの読み取り）\n1. 今週のTodo数・完了状況・優先度バランスから読み取れる「いまの状態」を3行で要約\n2. KGI/KPI達成に向けて「今週特に注目すべきポイント」を1つ指摘\n3. ボトルネックになりそうな兆候があれば明示\n\n■ Part 2: 今週相談すべきテーマ TOP5\n受講生がパッと思いつかない時のために、以下のような切り口で5つ提示してください：\n1. 「優先順位を見直す」系（例: インパクト×簡単さの再評価）\n2. 「Todoの粒度を見直す」系（例: 巨大なTodoを分割する）\n3. 「KPIへの貢献度を確認する」系（例: 今週のTodoでKPIにどれだけ近づくか）\n4. 「障害・つまづきを解消する」系（例: 進まないTodoがあるなら原因分析）\n5. 「次の一手を見つける」系（例: 達成後の次にやるべきこと）\n\n各テーマに：\n- なぜ今この受講生に必要か（根拠）\n- 期待される成果\n- そのままAIにコピペできる<strong>具体的なプロンプト文例</strong>\nを付けてください。\n\n■ Part 3: 1つだけ選ぶならコレ（今日のおすすめ）\n上記5つから、入力情報を踏まえて<strong>今日この瞬間に最も効果的な1つ</strong>を選び、なぜそれが最優先かを論理的に説明。さらに「そのまま実行して相談に進めるプロンプト全文」を提示。\n\n【重要】\n- 一般論ではなく、入力されているKGI/KPI・Todo・進捗・週次の振り返りから具体的に引用しながら論理展開\n- 「相談するテーマ」自体を提案するのが目的。受講生が「あ、それ気付かなかった」と思える視点を出す\n- プロンプト例は<strong>そのままコピペで動く完成形</strong>で${AI_OUTPUT_GUIDE}`;
+      prompt = `あなたは目標達成の伴走コーチです。受講生が「今週何を相談すべきかパッと思いつかない」状態。<strong>KGIの問い直しから始めて思考を再起動する壁打ち</strong>を提供してください。
+
+${ctx}
+
+## 1. KGIの問い直し ★最重要(まずここから)
+受講生のKGIを再掲した上で <strong>3つの問い</strong> を投げかける：
+
+  ❓ <strong>「本当にこのゴールでいいですか?」</strong>
+     — 現状の事業課題から見て、このKGIが解決すべき本丸か?
+  ❓ <strong>「このゴールを達成すれば現状の課題は解決しますか?」</strong>
+     — KGI達成=問題解決になっているか?
+  ❓ <strong>「このゴールはあなたの現状に対する解決策ですか?」</strong>
+     — KGIが「行動の指針」として機能しているか?
+
+各問いに：入力情報から読み取った「いまの答え」1〜2行／違和感あれば代替の問い・代替KGI候補。
+
+## 2. 定量で再確認
+KGIの現状値・目標値・今期残り時間を計算式で。
+
+## 3. 今週相談すべきテーマ TOP3
+以下から状況に合わせて3つ：
+  - 優先順位の見直し  - Todoの粒度見直し  - KPIへの貢献度確認
+  - つまづき解消  - 次の一手  - KGI/KPI自体の見直し
+
+各テーマに：なぜ今必要か(1行)／<strong>そのままコピペできるプロンプト全文</strong>。
+
+## 4. 💡 今日のおすすめ1本
+TOP3から最も効果的な1つ＋実行プロンプト全文。
+
+【重要】KGI問い直しを必ず最初に／プロンプト例はコピペで動く完成形／経営者+店長/マネージャー両視点${AI_OUTPUT_GUIDE}`;
     }
     titleEl.textContent = title;
     promptBox.textContent = prompt;
@@ -5713,45 +6147,56 @@
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // ===== Rich text inline editing (click display → textarea, blur → preview) =====
-  // Click on .rich-display: switch to textarea editing
+  // ===== Rich text fields: click anywhere on the field → opens modal =====
   document.addEventListener('click', (e) => {
-    const display = e.target.closest('.rich-display[data-act="rich-edit"]');
-    if (!display) return;
     if (e.target.closest('a')) return;
-    const wrap = display.closest('.rich-field-wrap');
-    const textarea = wrap?.querySelector('.rich-input');
-    if (!textarea) return;
-    display.style.display = 'none';
-    textarea.style.display = '';
-    textarea.focus();
-    try { textarea.setSelectionRange(textarea.value.length, textarea.value.length); } catch {}
-    autoResize(textarea);
-  });
-  // Blur on .rich-input: switch back to rendered preview
-  document.addEventListener('focusout', (e) => {
-    if (!e.target.matches || !e.target.matches('.rich-input')) return;
-    const textarea = e.target;
-    const wrap = textarea.closest('.rich-field-wrap');
-    const display = wrap?.querySelector('.rich-display');
-    if (!display) return;
-    const val = textarea.value;
-    const field = textarea.dataset.field;
-    const placeholder = field === 'planNote'
-      ? '自由メモ（任意） — クリックして入力。**太字** / *斜体* / URLが使えます'
-      : '振り返り — クリックして入力。**太字** / *斜体* / URLが使えます';
-    display.innerHTML = val ? renderRichText(val) : `<span class="rich-placeholder">${placeholder}</span>`;
-    display.style.display = '';
-    textarea.style.display = 'none';
+    const wrap = e.target.closest('.rich-field-wrap[data-act="rich-expand"], .rich-field-wrap[data-act="todo-detail-expand"], .rich-field-wrap[data-act="goal-text-expand"]');
+    if (!wrap) return;
+    e.stopPropagation();
+    const act = wrap.dataset.act;
+    if (act === 'rich-expand') {
+      const wi = +wrap.dataset.week;
+      const field = wrap.dataset.field;
+      const label = wrap.dataset.label || (field === 'planNote' ? '自由メモ' : '振り返り');
+      openRichModal(wi, field, label);
+    } else if (act === 'todo-detail-expand') {
+      openTodoDetailModal(wrap.dataset.todoid);
+    } else if (act === 'goal-text-expand') {
+      openGoalTextModal(wrap.dataset.goal, wrap.dataset.field, wrap.dataset.label);
+    }
   });
 
   // ===== Rich text expand modal =====
+  // ctx: { type: 'week', wi, field, label }  OR  { type: 'todo', todoId, label }
   let richModalCtx = null;
   function openRichModal(wi, field, label) {
-    richModalCtx = { wi, field, label };
+    richModalCtx = { type: 'week', wi, field, label };
     const w = state.weeks[wi];
     const val = (w && w[field]) || '';
     $('rich-modal-title').textContent = `📝 ${label} - 拡大表示（${w?.week || ''}）`;
+    $('rich-modal-textarea').value = val;
+    $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
+    $('rich-modal').classList.add('show');
+    setTimeout(() => $('rich-modal-textarea').focus(), 50);
+  }
+  function openTodoDetailModal(todoId) {
+    const found = findTodoById(todoId);
+    if (!found) return;
+    richModalCtx = { type: 'todo', todoId, label: '何をどうする？' };
+    const val = found.todo.details || '';
+    const todoText = found.todo.text || '(未入力)';
+    $('rich-modal-title').textContent = `📝 ${todoText.slice(0, 30)}${todoText.length > 30 ? '…' : ''} - 詳細メモ`;
+    $('rich-modal-textarea').value = val;
+    $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
+    $('rich-modal').classList.add('show');
+    setTimeout(() => $('rich-modal-textarea').focus(), 50);
+  }
+  function openGoalTextModal(goalKey, field, label) {
+    const g = state.goals[goalKey] || {};
+    richModalCtx = { type: 'goal', goalKey, field, label };
+    const val = g[field] || '';
+    const kpiLabel = goalKey === 'kgi' ? 'KGI' : goalKey === 'kpi1' ? 'KPI①' : goalKey === 'kpi2' ? 'KPI②' : goalKey === 'kpi3' ? 'KPI③' : goalKey;
+    $('rich-modal-title').textContent = `📝 ${kpiLabel} - ${label}`;
     $('rich-modal-textarea').value = val;
     $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
     $('rich-modal').classList.add('show');
@@ -5764,38 +6209,84 @@
   $('rich-modal-textarea').addEventListener('input', (e) => {
     if (!richModalCtx) return;
     const val = e.target.value;
-    const { wi, field } = richModalCtx;
-    if (state.weeks[wi]) {
-      state.weeks[wi][field] = val;
-      save();
-    }
-    $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
-    const wrap = document.querySelector(`.rich-field-wrap[data-week="${wi}"][data-field="${field}"]`);
-    if (wrap) {
-      const display = wrap.querySelector('.rich-display');
-      const inlineTa = wrap.querySelector('.rich-input');
-      if (display) {
-        const placeholder = field === 'planNote'
-          ? '自由メモ（任意） — クリックして入力。**太字** / *斜体* / URLが使えます'
-          : '振り返り — クリックして入力。**太字** / *斜体* / URLが使えます';
-        display.innerHTML = val ? renderRichText(val) : `<span class="rich-placeholder">${placeholder}</span>`;
+    if (richModalCtx.type === 'week') {
+      const { wi, field } = richModalCtx;
+      if (state.weeks[wi]) {
+        state.weeks[wi][field] = val;
+        save();
       }
-      if (inlineTa) inlineTa.value = val;
+      $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
+      const wrap = document.querySelector(`.rich-field-wrap[data-week="${wi}"][data-field="${field}"]`);
+      if (wrap) {
+        const display = wrap.querySelector('.rich-display');
+        const inlineTa = wrap.querySelector('.rich-input');
+        if (display) {
+          const placeholder = field === 'planNote'
+            ? '自由メモ（任意） — クリックして入力。**太字** / *斜体* / URLが使えます'
+            : '振り返り — クリックして入力。**太字** / *斜体* / URLが使えます';
+          display.innerHTML = val ? renderRichText(val) : `<span class="rich-placeholder">${placeholder}</span>`;
+        }
+        if (inlineTa) inlineTa.value = val;
+      }
+    } else if (richModalCtx.type === 'todo') {
+      const found = findTodoById(richModalCtx.todoId);
+      if (!found) return;
+      found.todo.details = val;
+      save();
+      $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
+      const wrap = document.querySelector(`.rich-field-wrap[data-todoid="${richModalCtx.todoId}"][data-field="details"]`);
+      if (wrap) {
+        const display = wrap.querySelector('.rich-display');
+        const inlineTa = wrap.querySelector('.rich-input');
+        if (display) {
+          display.innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">具体的にやることや参考リンクを書く（例: 「○○さんに連絡 - https://example.com の資料を見てから提案」）。**太字** / *斜体* / URL自動リンク 対応</span>';
+        }
+        if (inlineTa) inlineTa.value = val;
+      }
+      const itemWrap = document.querySelector(`.todo-item-wrap[data-id="${richModalCtx.todoId}"]`);
+      if (itemWrap) {
+        const btn = itemWrap.querySelector('[data-act="toggle-detail"]');
+        if (btn) {
+          const has = !!(val && val.trim());
+          btn.classList.toggle('has-content', has);
+          const isOpen = itemWrap.classList.contains('open');
+          btn.textContent = (isOpen ? '▼' : '▶') + (has ? '📝' : '＋');
+        }
+      }
+      // Sync the chip-detail buttons in week cards too
+      const has = !!(val && val.trim());
+      document.querySelectorAll(`.chip-detail[data-todoid="${richModalCtx.todoId}"]`).forEach(btn => {
+        btn.classList.toggle('has-content', has);
+        btn.textContent = has ? '📝' : '＋';
+      });
+    } else if (richModalCtx.type === 'goal') {
+      const { goalKey, field } = richModalCtx;
+      if (state.goals[goalKey]) {
+        state.goals[goalKey][field] = val;
+        save();
+        if (field === 'target') {
+          if (typeof updateKpiNames === 'function') updateKpiNames();
+          if (typeof renderResults === 'function') renderResults();
+        }
+      }
+      $('rich-modal-preview').innerHTML = val ? renderRichText(val) : '<span class="rich-placeholder">プレビューはここに表示されます</span>';
+      const wrap = document.querySelector(`.rich-field-wrap[data-goal="${goalKey}"][data-field="${field}"]`);
+      if (wrap) {
+        const display = wrap.querySelector('.rich-display');
+        if (display) {
+          const placeholderText = field === 'current' ? '今の状態を入力（クリックで全文表示・編集）。**太字** / # 見出し / URL自動リンクなど対応'
+            : field === 'issue' ? '目標達成を阻む課題を入力（クリックで全文表示・編集）'
+            : field === 'solution' ? '課題を解決する方法・アクションを入力（クリックで全文表示・編集）'
+            : 'クリックで全文表示・編集';
+          display.innerHTML = (val ? renderRichText(val) : `<span class="rich-placeholder">${placeholderText}</span>`) + '<span class="rich-expand-hint">クリックで全文＋編集</span>';
+        }
+      }
     }
   });
   $('rich-modal-close').addEventListener('click', closeRichModal);
   $('rich-modal-done').addEventListener('click', closeRichModal);
   $('rich-modal').addEventListener('click', (e) => {
     if (e.target.id === 'rich-modal') closeRichModal();
-  });
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-act="rich-expand"]');
-    if (!btn) return;
-    e.stopPropagation();
-    const wi = +btn.dataset.week;
-    const field = btn.dataset.field;
-    const label = btn.dataset.label || (field === 'planNote' ? '自由メモ' : '振り返り');
-    openRichModal(wi, field, label);
   });
 
   // Calendar modal handlers
